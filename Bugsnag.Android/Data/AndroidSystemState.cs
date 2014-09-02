@@ -1,12 +1,13 @@
-using System;
+using Android.Content.Res;
+using Bugsnag.Json;
 using Newtonsoft.Json;
 
 namespace Bugsnag.Data
 {
-    public class SystemState : Phoebe.Bugsnag.Data.SystemState
+    internal class AndroidSystemState : SystemState
     {
-        [JsonProperty ("orientation")]
-        public string Orientation { get; set; }
+        [JsonProperty ("orientation"), JsonConverter (typeof(OrientationConverter))]
+        public Orientation Orientation { get; set; }
 
         [JsonProperty ("batteryLevel")]
         public float BatteryLevel { get; set; }

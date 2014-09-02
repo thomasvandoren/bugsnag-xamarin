@@ -1,9 +1,8 @@
-using System;
 using Newtonsoft.Json;
 
 namespace Bugsnag.Data
 {
-    public class SystemInfo : Phoebe.Bugsnag.Data.SystemInfo
+    internal class TouchSystemInfo : SystemInfo
     {
         [JsonProperty ("manufacturer")]
         public string Manufacturer { get; set; }

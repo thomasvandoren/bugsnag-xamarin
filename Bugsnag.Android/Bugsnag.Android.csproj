@@ -46,14 +46,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BugsnagClient.cs" />
-    <Compile Include="Data\ApplicationInfo.cs" />
-    <Compile Include="Data\ApplicationState.cs" />
-    <Compile Include="Data\SystemInfo.cs" />
-    <Compile Include="Data\SystemState.cs" />
     <Compile Include="Json\OrientationConverter.cs" />
+    <Compile Include="Data\AndroidApplicationInfo.cs" />
+    <Compile Include="Data\AndroidApplicationState.cs" />
+    <Compile Include="Data\AndroidSystemInfo.cs" />
+    <Compile Include="Data\AndroidSystemState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Bugsnag\Bugsnag.csproj">
+      <Project>{CDA61B61-8B8F-4271-8910-431D36B0D01A}</Project>
+      <Name>Bugsnag</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

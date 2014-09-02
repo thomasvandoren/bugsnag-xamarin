@@ -1,9 +1,8 @@
-using System;
 using Newtonsoft.Json;
 
 namespace Bugsnag.Data
 {
-    public class ApplicationInfo : Phoebe.Bugsnag.Data.ApplicationInfo
+    internal class AndroidApplicationInfo : ApplicationInfo
     {
         [JsonProperty ("id")]
         public string Id { get; set; }

@@ -1,10 +1,10 @@
 using System;
-using Newtonsoft.Json;
 using Bugsnag.Json;
+using Newtonsoft.Json;
 
 namespace Bugsnag.Data
 {
-    public class ApplicationState : Phoebe.Bugsnag.Data.ApplicationState
+    internal class TouchApplicationState : ApplicationState
     {
         [JsonProperty ("durationInForeground"), JsonConverter (typeof(TimeSpanConverter))]
         public TimeSpan SessionLength { get; set; }
