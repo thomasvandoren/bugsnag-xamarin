@@ -4,7 +4,7 @@ using Bugsnag.Data;
 
 namespace Bugsnag
 {
-    interface IBugsnagClient : IDisposable
+    public interface IBugsnagClient : IDisposable
     {
         bool AutoNotify { get; set; }
 

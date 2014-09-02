@@ -7,6 +7,9 @@ namespace Bugsnag.Data
     [JsonObject (MemberSerialization.OptIn)]
     public class Event
     {
+        [JsonProperty ("payloadVersion")]
+        public string Version { get { return "2"; } }
+
         [JsonProperty ("user", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public UserInfo User { get; set; }
 

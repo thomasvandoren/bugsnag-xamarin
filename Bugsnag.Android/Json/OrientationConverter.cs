@@ -1,6 +1,6 @@
 using System;
-using Newtonsoft.Json;
 using Android.Content.Res;
+using Newtonsoft.Json;
 
 namespace Bugsnag.Json
 {

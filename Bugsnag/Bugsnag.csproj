@@ -44,7 +44,6 @@
     <Compile Include="Data\SystemState.cs" />
     <Compile Include="Data\UserInfo.cs" />
     <Compile Include="Data\UserMetrics.cs" />
-    <Compile Include="IO\CombiningStream.cs" />
     <Compile Include="Json\ErrorSeverityConverter.cs" />
     <Compile Include="Json\JObjectExtensions.cs" />
     <Compile Include="Json\TimeSpanConverter.cs" />

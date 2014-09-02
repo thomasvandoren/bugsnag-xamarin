@@ -43,14 +43,24 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BugsnagClient.cs" />
     <Compile Include="Json\OrientationConverter.cs" />
     <Compile Include="Data\AndroidApplicationInfo.cs" />
     <Compile Include="Data\AndroidApplicationState.cs" />
     <Compile Include="Data\AndroidSystemInfo.cs" />
     <Compile Include="Data\AndroidSystemState.cs" />
+    <Compile Include="Interceptor\AppDomainInterceptor.cs" />
+    <Compile Include="Interceptor\TaskSchedulerInterceptor.cs" />
+    <Compile Include="BugsnagClient.cs" />
+    <Compile Include="Interceptor\AndroidInterceptor.cs" />
+    <Compile Include="StateReporter.cs" />
+    <Compile Include="StateCacher.cs" />
+    <Compile Include="ActivityTracker.cs" />
+    <Compile Include="ExceptionConverter.cs" />
+    <Compile Include="Notifier.cs" />
+    <Compile Include="IO\CombiningStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -61,5 +71,9 @@
       <Project>{CDA61B61-8B8F-4271-8910-431D36B0D01A}</Project>
       <Name>Bugsnag</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interceptor\" />
+    <Folder Include="IO\" />
   </ItemGroup>
 </Project>
