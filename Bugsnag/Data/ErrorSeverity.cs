@@ -1,5 +1,3 @@
-using System;
-
 namespace Bugsnag.Data
 {
     public enum ErrorSeverity
