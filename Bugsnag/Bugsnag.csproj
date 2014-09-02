@@ -31,7 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BugsnagClient.cs" />
     <Compile Include="Data\ApplicationInfo.cs" />
     <Compile Include="Data\ApplicationState.cs" />
     <Compile Include="Data\ErrorSeverity.cs" />
@@ -49,6 +48,7 @@
     <Compile Include="Json\ErrorSeverityConverter.cs" />
     <Compile Include="Json\JObjectExtensions.cs" />
     <Compile Include="Json\TimeSpanConverter.cs" />
+    <Compile Include="IBugsnagClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -58,5 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="BugsnagClient.cs" />
   </ItemGroup>
 </Project>
