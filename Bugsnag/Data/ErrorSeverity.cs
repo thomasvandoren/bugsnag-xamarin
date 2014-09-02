@@ -1,6 +1,6 @@
 using System;
 
-namespace Toggl.Phoebe.Bugsnag.Data
+namespace Bugsnag.Data
 {
     public enum ErrorSeverity
     {

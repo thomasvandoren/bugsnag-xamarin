@@ -1,9 +1,9 @@
 using System;
 using Newtonsoft.Json;
-using Toggl.Phoebe.Bugsnag.Json;
+using Bugsnag.Json;
 using System.Collections.Generic;
 
-namespace Toggl.Phoebe.Bugsnag.Data
+namespace Bugsnag.Data
 {
     [JsonObject (MemberSerialization.OptIn)]
     public class Event

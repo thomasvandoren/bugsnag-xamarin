@@ -1,9 +1,9 @@
 using System;
 using Newtonsoft.Json;
 using Android.Content.Res;
-using Toggl.Joey.Bugsnag.Json;
+using Bugsnag.Json;
 
-namespace Toggl.Joey.Bugsnag.Data
+namespace Bugsnag.Data
 {
     public class SystemState : Phoebe.Bugsnag.Data.SystemState
     {

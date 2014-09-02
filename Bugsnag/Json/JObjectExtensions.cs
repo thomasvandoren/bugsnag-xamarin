@@ -3,7 +3,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace Toggl.Phoebe.Bugsnag.Json
+namespace Bugsnag.Json
 {
     public static class JObjectExtensions
     {

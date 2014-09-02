@@ -1,8 +1,8 @@
 using System;
 using Newtonsoft.Json;
-using Toggl.Phoebe.Bugsnag.Json;
+using Bugsnag.Json;
 
-namespace Toggl.Ross.Bugsnag.Data
+namespace Bugsnag.Data
 {
     public class ApplicationState : Phoebe.Bugsnag.Data.ApplicationState
     {

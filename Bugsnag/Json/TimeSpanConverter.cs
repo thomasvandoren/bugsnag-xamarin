@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Toggl.Phoebe.Bugsnag.Json
+namespace Bugsnag.Json
 {
     public class TimeSpanConverter : JsonConverter
     {

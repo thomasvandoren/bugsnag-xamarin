@@ -1,8 +1,8 @@
 using System;
 using Newtonsoft.Json;
-using Toggl.Phoebe.Bugsnag.Data;
+using Bugsnag.Data;
 
-namespace Toggl.Phoebe.Bugsnag.Json
+namespace Bugsnag.Json
 {
     public class ErrorSeverityConverter : JsonConverter
     {

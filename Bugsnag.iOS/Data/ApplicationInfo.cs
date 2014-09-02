@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Toggl.Ross.Bugsnag.Data
+namespace Bugsnag.Data
 {
     public class ApplicationInfo : Phoebe.Bugsnag.Data.ApplicationInfo
     {

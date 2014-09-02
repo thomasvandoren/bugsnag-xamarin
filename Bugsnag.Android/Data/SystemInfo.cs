@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Toggl.Joey.Bugsnag.Data
+namespace Bugsnag.Data
 {
     public class SystemInfo : Phoebe.Bugsnag.Data.SystemInfo
     {

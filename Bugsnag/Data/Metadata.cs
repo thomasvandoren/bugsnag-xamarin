@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json.Linq;
 
-namespace Toggl.Phoebe.Bugsnag.Data
+namespace Bugsnag.Data
 {
     public class Metadata : JObject
     {

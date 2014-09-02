@@ -6,10 +6,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Toggl.Phoebe.Bugsnag.Data;
-using Toggl.Phoebe.Bugsnag.Json;
+using Bugsnag.Data;
+using Bugsnag.Json;
 
-namespace Toggl.Phoebe.Bugsnag
+namespace Bugsnag
 {
     public abstract class BugsnagClient : IDisposable
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Toggl.Phoebe.Bugsnag.IO
+namespace Bugsnag.IO
 {
     public class CombiningStream : Stream
     {

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using Android.Content;
 using Android.Util;
 using Newtonsoft.Json;
-using Toggl.Phoebe.Bugsnag.Data;
-using Toggl.Phoebe.Bugsnag.IO;
+using Bugsnag.Data;
+using Bugsnag.IO;
 
-namespace Toggl.Joey.Bugsnag
+namespace Bugsnag
 {
-    public class BugsnagClient : Toggl.Phoebe.Bugsnag.BugsnagClient
+    public class BugsnagClient : Bugsnag.BugsnagClient
     {
         private static readonly TimeSpan IdleTimeForSessionEnd = TimeSpan.FromSeconds (10);
         private static readonly TimeSpan StateCacheTimeToLive = TimeSpan.FromSeconds (1);
@@ -371,7 +371,7 @@ namespace Toggl.Joey.Bugsnag
         protected override ApplicationInfo GetAppInfo ()
         {
             if (appInfo == null) {
-                appInfo = new Toggl.Joey.Bugsnag.Data.ApplicationInfo () {
+                appInfo = new Bugsnag.Data.ApplicationInfo () {
                     Id = androidContext.PackageName,
                     Package = androidContext.PackageName,
                     Version = AndroidInfo.GetAppVersion (androidContext),
@@ -406,7 +406,7 @@ namespace Toggl.Joey.Bugsnag
                 }
             }
 
-            return new Toggl.Joey.Bugsnag.Data.ApplicationState () {
+            return new Bugsnag.Data.ApplicationState () {
                 SessionLength = SessionLength,
                 HasLowMemory = AndroidInfo.CheckMemoryLow (androidContext),
                 InForeground = InForeground,
@@ -423,7 +423,7 @@ namespace Toggl.Joey.Bugsnag
         protected override SystemInfo GetSystemInfo ()
         {
             if (systemInfo == null) {
-                systemInfo = new Toggl.Joey.Bugsnag.Data.SystemInfo () {
+                systemInfo = new Bugsnag.Data.SystemInfo () {
                     Id = DeviceId,
                     Manufacturer = Android.OS.Build.Manufacturer,
                     Model = Android.OS.Build.Model,
@@ -450,7 +450,7 @@ namespace Toggl.Joey.Bugsnag
                 }
             }
 
-            return new Toggl.Joey.Bugsnag.Data.SystemState () {
+            return new Bugsnag.Data.SystemState () {
                 FreeMemory = (ulong)AndroidInfo.GetFreeMemory (),
                 Orientation = AndroidInfo.GetOrientation (androidContext),
                 BatteryLevel = AndroidInfo.GetBatteryLevel (androidContext),

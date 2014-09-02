@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Android.Content.Res;
 
-namespace Toggl.Joey.Bugsnag.Json
+namespace Bugsnag.Json
 {
     public class OrientationConverter : JsonConverter
     {

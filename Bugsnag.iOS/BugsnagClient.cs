@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using Newtonsoft.Json;
-using Toggl.Phoebe.Bugsnag.Data;
-using Toggl.Phoebe.Bugsnag.IO;
+using Bugsnag.Data;
+using Bugsnag.IO;
 
-namespace Toggl.Ross.Bugsnag
+namespace Bugsnag
 {
-    public class BugsnagClient : Toggl.Phoebe.Bugsnag.BugsnagClient
+    public class BugsnagClient : Bugsnag.BugsnagClient
     {
         private static readonly TimeSpan IdleTimeForSessionEnd = TimeSpan.FromSeconds (10);
         private static readonly string Tag = "Bugsnag";
@@ -405,7 +405,7 @@ namespace Toggl.Ross.Bugsnag
                 var bundleVersion = (string)(NSString)bundle.ObjectForInfoDictionary ("CFBundleVersion");
                 var name = (string)(NSString)bundle.ObjectForInfoDictionary ("CFBundleDisplayName");
 
-                appInfo = new Toggl.Ross.Bugsnag.Data.ApplicationInfo () {
+                appInfo = new Bugsnag.Data.ApplicationInfo () {
                     Id = bundle.BundleIdentifier,
                     Version = version,
                     BundleVersion = bundleVersion,
@@ -418,7 +418,7 @@ namespace Toggl.Ross.Bugsnag
 
         protected override ApplicationState GetAppState ()
         {
-            return new Toggl.Ross.Bugsnag.Data.ApplicationState () {
+            return new Bugsnag.Data.ApplicationState () {
                 SessionLength = DateTime.UtcNow - sessionStartTime,
                 TimeSinceMemoryWarning = DateTime.UtcNow - lastMemoryWarning,
                 InForeground = inForeground,
@@ -431,7 +431,7 @@ namespace Toggl.Ross.Bugsnag
         protected override SystemInfo GetSystemInfo ()
         {
             if (systemInfo == null) {
-                systemInfo = new Toggl.Ross.Bugsnag.Data.SystemInfo () {
+                systemInfo = new Bugsnag.Data.SystemInfo () {
                     Id = DeviceId,
                     Manufacturer = "Apple",
                     Model = AppleInfo.Model,
@@ -450,7 +450,7 @@ namespace Toggl.Ross.Bugsnag
 
         protected override SystemState GetSystemState ()
         {
-            return new Toggl.Ross.Bugsnag.Data.SystemState () {
+            return new Bugsnag.Data.SystemState () {
                 FreeMemory = AppleInfo.FreeMemory,
                 Orientation = orientation,
                 BatteryLevel = batteryLevel,

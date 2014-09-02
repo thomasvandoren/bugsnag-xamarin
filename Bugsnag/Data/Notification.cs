@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Toggl.Phoebe.Bugsnag.Data
+namespace Bugsnag.Data
 {
     [JsonObject (MemberSerialization.OptIn)]
     public class Notification
