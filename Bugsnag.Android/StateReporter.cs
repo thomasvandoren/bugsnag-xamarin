@@ -11,7 +11,6 @@ namespace Bugsnag
     {
         private readonly BugsnagClient client;
         private readonly Context ctx;
-        private readonly DateTime appStartTime = DateTime.UtcNow;
 
         public StateReporter (BugsnagClient client, Context ctx)
         {
@@ -43,7 +42,7 @@ namespace Bugsnag
                 InForeground = client.ActivityTracker.InForeground,
                 ActivityStack = client.ActivityTracker.Activities,
                 CurrentActivity = client.ActivityTracker.TopActivity,
-                RunningTime = DateTime.UtcNow - appStartTime,
+                RunningTime = client.ActivityTracker.RunningTime,
                 MemoryUsage = GetMemoryUsedByApp (),
             };
         }

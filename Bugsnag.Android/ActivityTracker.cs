@@ -75,5 +75,9 @@ namespace Bugsnag
                 }
             }
         }
+
+        public TimeSpan RunningTime {
+            get { return DateTime.UtcNow - appStartTime; }
+        }
     }
 }
