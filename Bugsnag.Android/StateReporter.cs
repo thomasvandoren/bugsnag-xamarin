@@ -206,7 +206,7 @@ namespace Bugsnag
                 var cr = ctx.ContentResolver;
                 var providers = Settings.Secure.GetString (
                                     cr, Settings.Secure.LocationProvidersAllowed);
-                if (providers != null && providers.Length > 0) {
+                if (!String.IsNullOrEmpty (providers)) {
                     return "allowed";
                 } else {
                     return "disallowed";
