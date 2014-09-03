@@ -13,5 +13,6 @@ local.properties
 .DS_Store
 *.user
 *.suo
+*.nupkg
 packages
 Resource.designer.cs

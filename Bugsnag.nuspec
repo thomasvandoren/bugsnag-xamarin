@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Toggl.Bugsnag</id>
+    <title>Bugsnag Notifier for Xamarin Android/iOS</title>
+    <version>1.0</version>
+    <authors>Toggl</authors>
+    <owners>toggl, roosmaa</owners>
+    <licenseUrl>https://github.com/toggl/bugsnag-xamarin/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/toggl/bugsnag-xamarin</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Easily log exceptions and crashes to Bugsnag in your Xamarin.Android or Xamarin.iOS applications.</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>bugsnag xamarin android ios crash exception bug</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="6.0.4" />
+    </dependencies>
+  </metadata>
+  <files>
+    <!-- Portable -->
+    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/portable-net45+wp8+win8+MonoAndroid10+MonoTouch10/Bugsnag.dll" />
+
+    <!-- Xamarin.Android -->
+    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/MonoAndroid10/Bugsnag.dll" />
+    <file src="Bugsnag.Android/bin/Release/Bugsnag.Android.dll" target="lib/MonoAndroid10/Bugsnag.Android.dll" />
+
+    <!-- Xamarin.iOS -->
+    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/MonoTouch10/Bugsnag.dll" />
+    <file src="Bugsnag.iOS/bin/Release/Bugsnag.iOS.dll" target="lib/MonoTouch10/Bugsnag.iOS.dll" />
+  </files>
+</package>
