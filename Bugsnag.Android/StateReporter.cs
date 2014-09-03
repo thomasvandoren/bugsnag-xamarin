@@ -1,9 +1,12 @@
 ﻿using System;
-using System.Linq;
-using Bugsnag.Data;
+using Android.App;
 using Android.Content;
-using Android.Util;
 using Android.Content.Res;
+using Android.Net;
+using Android.OS;
+using Android.Provider;
+using Android.Util;
+using Bugsnag.Data;
 
 namespace Bugsnag
 {
@@ -51,14 +54,14 @@ namespace Bugsnag
         {
             return new AndroidSystemInfo () {
                 Id = client.DeviceId,
-                Manufacturer = Android.OS.Build.Manufacturer,
-                Model = Android.OS.Build.Model,
+                Manufacturer = Build.Manufacturer,
+                Model = Build.Model,
                 ScreenDensity = ctx.Resources.DisplayMetrics.Density,
                 ScreenResolution = GetScreenResolution (),
                 TotalMemory = (ulong)GetMemoryAvailable (),
                 OperatingSystem = "android",
-                OperatingSystemVersion = Android.OS.Build.VERSION.Release,
-                ApiLevel = (int)Android.OS.Build.VERSION.SdkInt,
+                OperatingSystemVersion = Build.VERSION.Release,
+                ApiLevel = (int)Build.VERSION.SdkInt,
                 IsRooted = CheckRoot (),
                 Locale = Java.Util.Locale.Default.ToString (),
             };
@@ -128,7 +131,7 @@ namespace Bugsnag
 
         private static bool CheckTestKeysBuild ()
         {
-            var tags = Android.OS.Build.Tags;
+            var tags = Build.Tags;
             return tags != null && tags.Contains ("test-keys");
         }
 
@@ -147,7 +150,7 @@ namespace Bugsnag
                 return ctx.Resources.Configuration.Orientation;
             } catch (Java.Lang.Throwable ex) {
                 Log.Warn (BugsnagClient.Tag, ex, "Failed to determine device orientation.");
-                return Android.Content.Res.Orientation.Undefined;
+                return Orientation.Undefined;
             }
         }
 
@@ -157,8 +160,8 @@ namespace Bugsnag
                 var filter = new IntentFilter (Intent.ActionBatteryChanged);
                 var intent = ctx.RegisterReceiver (null, filter);
 
-                var status = (Android.OS.BatteryStatus)intent.GetIntExtra ("status", -1);
-                return status == Android.OS.BatteryStatus.Charging || status == Android.OS.BatteryStatus.Full;
+                var status = (BatteryStatus)intent.GetIntExtra ("status", -1);
+                return status == BatteryStatus.Charging || status == BatteryStatus.Full;
             } catch (Java.Lang.Throwable ex) {
                 Log.Warn (BugsnagClient.Tag, ex, "Failed to determine if the battery is charging.");
                 return false;
@@ -184,10 +187,10 @@ namespace Bugsnag
         private long GetAvailableDiskSpace ()
         {
             try {
-                var externalStat = new Android.OS.StatFs (Android.OS.Environment.ExternalStorageDirectory.Path);
+                var externalStat = new StatFs (Android.OS.Environment.ExternalStorageDirectory.Path);
                 var externalAvail = (long)externalStat.BlockSize * (long)externalStat.BlockCount;
 
-                var internalStat = new Android.OS.StatFs (Android.OS.Environment.DataDirectory.Path);
+                var internalStat = new StatFs (Android.OS.Environment.DataDirectory.Path);
                 var internalAvail = (long)internalStat.BlockSize * (long)internalStat.BlockCount;
 
                 return Math.Min (externalAvail, internalAvail);
@@ -201,8 +204,8 @@ namespace Bugsnag
         {
             try {
                 var cr = ctx.ContentResolver;
-                var providers = Android.Provider.Settings.Secure.GetString (
-                                    cr, Android.Provider.Settings.Secure.LocationProvidersAllowed);
+                var providers = Settings.Secure.GetString (
+                                    cr, Settings.Secure.LocationProvidersAllowed);
                 if (providers != null && providers.Length > 0) {
                     return "allowed";
                 } else {
@@ -217,14 +220,14 @@ namespace Bugsnag
         private string GetNetworkStatus ()
         {
             try {
-                var cm = (Android.Net.ConnectivityManager)ctx.GetSystemService (
-                             Android.Content.Context.ConnectivityService);
+                var cm = (ConnectivityManager)ctx.GetSystemService (
+                             Context.ConnectivityService);
                 var activeNetwork = cm.ActiveNetworkInfo;
                 if (activeNetwork != null && activeNetwork.IsConnectedOrConnecting) {
                     switch (activeNetwork.Type) {
-                    case Android.Net.ConnectivityType.Wifi:
+                    case ConnectivityType.Wifi:
                         return "wifi";
-                    case Android.Net.ConnectivityType.Ethernet:
+                    case ConnectivityType.Ethernet:
                         return "ethernet";
                     default:
                         return "cellular";
@@ -241,9 +244,9 @@ namespace Bugsnag
         private bool CheckMemoryLow ()
         {
             try {
-                var am = (Android.App.ActivityManager)ctx.GetSystemService (
-                             Android.Content.Context.ActivityService);
-                var memInfo = new Android.App.ActivityManager.MemoryInfo ();
+                var am = (ActivityManager)ctx.GetSystemService (
+                             Context.ActivityService);
+                var memInfo = new ActivityManager.MemoryInfo ();
                 am.GetMemoryInfo (memInfo);
 
                 return memInfo.LowMemory;
