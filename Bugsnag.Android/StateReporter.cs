@@ -9,8 +9,6 @@ namespace Bugsnag
 {
     internal class StateReporter
     {
-        private const string Tag = "Bugsnag";
-
         private readonly BugsnagClient client;
         private readonly Context ctx;
         private readonly DateTime appStartTime = DateTime.UtcNow;
@@ -86,7 +84,7 @@ namespace Bugsnag
                 var rt = Java.Lang.Runtime.GetRuntime ();
                 return rt.TotalMemory () - rt.FreeMemory ();
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to calculate memory used by the application.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to calculate memory used by the application.");
                 return 0;
             }
         }
@@ -99,7 +97,7 @@ namespace Bugsnag
                     Math.Max (dm.WidthPixels, dm.HeightPixels),
                     Math.Min (dm.WidthPixels, dm.HeightPixels));
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to get screen resolution.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to get screen resolution.");
                 return null;
             }
         }
@@ -114,7 +112,7 @@ namespace Bugsnag
                     return rt.TotalMemory ();
                 }
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to retrieve available memory amount.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to retrieve available memory amount.");
                 return 0;
             }
         }
@@ -149,7 +147,7 @@ namespace Bugsnag
             try {
                 return ctx.Resources.Configuration.Orientation;
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to determine device orientation.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to determine device orientation.");
                 return Android.Content.Res.Orientation.Undefined;
             }
         }
@@ -163,7 +161,7 @@ namespace Bugsnag
                 var status = (Android.OS.BatteryStatus)intent.GetIntExtra ("status", -1);
                 return status == Android.OS.BatteryStatus.Charging || status == Android.OS.BatteryStatus.Full;
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to determine if the battery is charging.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to determine if the battery is charging.");
                 return false;
             }
         }
@@ -179,7 +177,7 @@ namespace Bugsnag
 
                 return level / (float)scale;
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to determine battery level.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to determine battery level.");
                 return 0;
             }
         }
@@ -195,7 +193,7 @@ namespace Bugsnag
 
                 return Math.Min (externalAvail, internalAvail);
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to determine available disk space.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to determine available disk space.");
                 return 0;
             }
         }
@@ -212,7 +210,7 @@ namespace Bugsnag
                     return "disallowed";
                 }
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to determine GPS status.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to determine GPS status.");
                 return null;
             }
         }
@@ -236,7 +234,7 @@ namespace Bugsnag
                     return "none";
                 }
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to determine network status.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to determine network status.");
                 return null;
             }
         }
@@ -251,7 +249,7 @@ namespace Bugsnag
 
                 return memInfo.LowMemory;
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to determine low memory state.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to determine low memory state.");
                 return false;
             }
         }
@@ -262,7 +260,7 @@ namespace Bugsnag
                 var pkg = ctx.PackageManager.GetPackageInfo (ctx.PackageName, 0);
                 return pkg.VersionName;
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to get the application version.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to get the application version.");
                 return null;
             }
         }
@@ -273,7 +271,7 @@ namespace Bugsnag
                 var app = ctx.PackageManager.GetApplicationInfo (ctx.PackageName, 0);
                 return app.Name;
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed to get the application name.");
+                Log.Warn (BugsnagClient.Tag, ex, "Failed to get the application name.");
                 return null;
             }
         }

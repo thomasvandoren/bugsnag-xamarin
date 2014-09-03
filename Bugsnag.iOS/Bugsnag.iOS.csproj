@@ -36,17 +36,33 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BugsnagClient.cs" />
     <Compile Include="Data\TouchApplicationInfo.cs" />
     <Compile Include="Data\TouchApplicationState.cs" />
     <Compile Include="Data\TouchSystemInfo.cs" />
     <Compile Include="Data\TouchSystemState.cs" />
+    <Compile Include="..\Bugsnag\Interceptor\AppDomainInterceptor.cs">
+      <Link>Interceptor\AppDomainInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Bugsnag\Interceptor\TaskSchedulerInterceptor.cs">
+      <Link>Interceptor\TaskSchedulerInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="ExceptionConverter.cs" />
+    <Compile Include="StateReporter.cs" />
+    <Compile Include="StateTracker.cs" />
+    <Compile Include="Json\OrientationConverter.cs" />
+    <Compile Include="..\Bugsnag\Notifier.cs">
+      <Link>Notifier.cs</Link>
+    </Compile>
+    <Compile Include="..\Bugsnag\StateCacher.cs">
+      <Link>StateCacher.cs</Link>
+    </Compile>
+    <Compile Include="..\Bugsnag\IO\CombiningStream.cs">
+      <Link>IO\CombiningStream.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>

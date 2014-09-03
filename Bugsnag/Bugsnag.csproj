@@ -30,7 +30,6 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\ApplicationInfo.cs" />
     <Compile Include="Data\ApplicationState.cs" />
     <Compile Include="Data\ErrorSeverity.cs" />
@@ -57,10 +56,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Interceptor\AppDomainInterceptor.cs" />
-    <None Include="Interceptor\TaskSchedulerInterceptor.cs" />
-    <None Include="IO\CombiningStream.cs" />
-    <None Include="Notifier.cs" />
-    <None Include="StateCacher.cs" />
   </ItemGroup>
 </Project>

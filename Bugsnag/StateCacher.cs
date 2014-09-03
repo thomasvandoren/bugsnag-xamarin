@@ -9,10 +9,10 @@ namespace Bugsnag
 
         private readonly StateReporter reporter;
         private DateTime? cacheTime;
-        private AndroidApplicationInfo appInfo;
-        private AndroidApplicationState appState;
-        private AndroidSystemInfo sysInfo;
-        private AndroidSystemState sysState;
+        private ApplicationInfo appInfo;
+        private ApplicationState appState;
+        private SystemInfo sysInfo;
+        private SystemState sysState;
 
         public StateCacher (StateReporter reporter)
         {
@@ -36,7 +36,7 @@ namespace Bugsnag
             cacheTime = DateTime.UtcNow;
         }
 
-        public AndroidApplicationInfo GetApplicationInfo ()
+        public ApplicationInfo GetApplicationInfo ()
         {
             if (appInfo == null) {
                 appInfo = reporter.GetApplicationInfo ();
@@ -44,7 +44,7 @@ namespace Bugsnag
             return appInfo;
         }
 
-        public AndroidApplicationState GetApplicationState ()
+        public ApplicationState GetApplicationState ()
         {
             if (cacheTime.HasValue && appState != null) {
                 if (cacheTime.Value + TimeToLive > DateTime.UtcNow) {
@@ -58,7 +58,7 @@ namespace Bugsnag
             return reporter.GetApplicationState ();
         }
 
-        public AndroidSystemInfo GetSystemInfo ()
+        public SystemInfo GetSystemInfo ()
         {
             if (sysInfo == null) {
                 sysInfo = reporter.GetSystemInfo ();
@@ -66,7 +66,7 @@ namespace Bugsnag
             return sysInfo;
         }
 
-        public AndroidSystemState GetSystemState ()
+        public SystemState GetSystemState ()
         {
             if (cacheTime.HasValue && sysState != null) {
                 if (cacheTime.Value + TimeToLive > DateTime.UtcNow) {

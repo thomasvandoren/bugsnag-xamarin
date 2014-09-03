@@ -2,71 +2,64 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using Bugsnag.Data;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using Newtonsoft.Json;
-using Bugsnag.Data;
-using Bugsnag.IO;
+using Bugsnag.Interceptor;
 
 namespace Bugsnag
 {
-    public class BugsnagClient : Bugsnag.BugsnagClient
+    public class BugsnagClient : IBugsnagClient
     {
-        private static readonly TimeSpan IdleTimeForSessionEnd = TimeSpan.FromSeconds (10);
-        private static readonly string Tag = "Bugsnag";
+        internal const string Tag = "Bugsnag";
+
+        private readonly string apiKey;
         private readonly bool sendMetrics;
-        private readonly string errorsCachePath;
-        private DateTime appStartTime;
-        private DateTime sessionPauseTime;
-        private DateTime sessionStartTime;
-        private bool storeOnly;
-        private bool isInitialised;
-        private ApplicationInfo appInfo;
-        private SystemInfo systemInfo;
-        private DateTime lastMemoryWarning;
-        private bool inForeground;
-        private float batteryLevel;
-        private bool isCharging;
-        private string orientation;
+        private readonly StateCacher state;
+        private readonly StateTracker stateTracker;
+        private readonly ExceptionConverter exceptionConverter;
+        private readonly Notifier notifier;
+        private readonly UserInfo userInfo = new UserInfo ();
+        private readonly Metadata metadata = new Metadata ();
+        private IDisposable[] interceptors;
         private NSObject notifApplicationDidBecomeActive;
-        private NSObject notifAapplicationDidEnterBackground;
-        private NSObject notifDeviceBatteryStateDidChange;
-        private NSObject notifDeviceBatteryLevelDidChange;
-        private NSObject notifDeviceOrientationDidChange;
-        private NSObject notifApplicationDidReceiveMemoryWarning;
 
-        public BugsnagClient (string apiKey, bool enableMetrics = true) : base (apiKey)
+        public BugsnagClient (string apiKey, bool enableMetrics = true)
         {
+            if (apiKey == null)
+                throw new ArgumentNullException ("apiKey");
+
+            this.apiKey = apiKey;
             sendMetrics = enableMetrics;
-            appStartTime = DateTime.UtcNow;
-            errorsCachePath = MakeCachePath ();
 
-            // TODO: Install crash handlers
+            // Install exception handlers
+            interceptors = new IDisposable[] {
+                new AppDomainInterceptor (this),
+                new TaskSchedulerInterceptor (this),
+            };
 
-            // Register observers
+            state = new StateCacher (new StateReporter (this));
+            stateTracker = new StateTracker ();
+            exceptionConverter = new ExceptionConverter (this);
+            notifier = new Notifier (this, MakeErrorCacheDir ());
+
+            // Register observers init observer
             notifApplicationDidBecomeActive = NSNotificationCenter.DefaultCenter.AddObserver (
                 UIApplication.DidBecomeActiveNotification, OnApplicationDidBecomeActive);
-            notifAapplicationDidEnterBackground = NSNotificationCenter.DefaultCenter.AddObserver (
-                UIApplication.DidEnterBackgroundNotification, OnApplicationDidEnterBackground);
-            notifApplicationDidReceiveMemoryWarning = NSNotificationCenter.DefaultCenter.AddObserver (
-                UIApplication.DidReceiveMemoryWarningNotification, OnApplicationDidReceiveMemoryWarning);
-            notifDeviceBatteryStateDidChange = NSNotificationCenter.DefaultCenter.AddObserver (
-                UIDevice.BatteryStateDidChangeNotification, OnBatteryChanged);
-            notifDeviceBatteryLevelDidChange = NSNotificationCenter.DefaultCenter.AddObserver (
-                UIDevice.BatteryLevelDidChangeNotification, OnBatteryChanged);
-            notifDeviceOrientationDidChange = NSNotificationCenter.DefaultCenter.AddObserver (
-                UIDevice.OrientationDidChangeNotification, OnOrientationChanged);
-
-            UIDevice.CurrentDevice.BatteryMonitoringEnabled = true;
-            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications ();
         }
 
-        protected override void Dispose (bool disposing)
+        ~BugsnagClient ()
+        {
+            Dispose (false);
+        }
+
+        public void Dispose ()
+        {
+            Dispose (true);
+            GC.SuppressFinalize (this);
+        }
+
+        protected virtual void Dispose (bool disposing)
         {
             if (disposing) {
                 // Remove observers
@@ -74,400 +67,145 @@ namespace Bugsnag
                     NSNotificationCenter.DefaultCenter.RemoveObserver (notifApplicationDidBecomeActive);
                     notifApplicationDidBecomeActive = null;
                 }
-                if (notifAapplicationDidEnterBackground != null) {
-                    NSNotificationCenter.DefaultCenter.RemoveObserver (notifAapplicationDidEnterBackground);
-                    notifAapplicationDidEnterBackground = null;
-                }
-                if (notifApplicationDidReceiveMemoryWarning != null) {
-                    NSNotificationCenter.DefaultCenter.RemoveObserver (notifApplicationDidReceiveMemoryWarning);
-                    notifApplicationDidReceiveMemoryWarning = null;
-                }
-                if (notifDeviceBatteryStateDidChange != null) {
-                    NSNotificationCenter.DefaultCenter.RemoveObserver (notifDeviceBatteryStateDidChange);
-                    notifDeviceBatteryStateDidChange = null;
-                }
-                if (notifDeviceBatteryLevelDidChange != null) {
-                    NSNotificationCenter.DefaultCenter.RemoveObserver (notifDeviceBatteryLevelDidChange);
-                    notifDeviceBatteryLevelDidChange = null;
-                }
-                if (notifDeviceOrientationDidChange != null) {
-                    NSNotificationCenter.DefaultCenter.RemoveObserver (notifDeviceOrientationDidChange);
-                    notifDeviceOrientationDidChange = null;
-                }
 
-                // TODO: Uninstall crash handlers
+                // Dispose error interceptors
+                foreach (var obj in interceptors.Reverse()) {
+                    obj.Dispose ();
+                }
             }
+        }
 
-            base.Dispose (disposing);
+        internal string ApiKey {
+            get { return apiKey; }
+        }
+
+        internal StateCacher State {
+            get { return state; }
+        }
+
+        internal Notifier Notifier {
+            get { return notifier; }
+        }
+
+        internal StateTracker StateTracker {
+            get { return stateTracker; }
+        }
+
+        internal bool ShouldNotify {
+            get {
+                if (NotifyReleaseStages == null)
+                    return true;
+                return NotifyReleaseStages.Contains (ReleaseStage);
+            }
         }
 
         public string DeviceId { get; set; }
 
-        private void OnApplicationDidBecomeActive (NSNotification notif)
-        {
-            inForeground = true;
+        public bool AutoNotify { get; set; }
 
-            if (DateTime.UtcNow - sessionPauseTime > IdleTimeForSessionEnd) {
-                sessionStartTime = DateTime.UtcNow;
-            }
+        public string Context { get; set; }
 
-            if (!isInitialised) {
-                if (sendMetrics) {
-                    TrackUser ();
-                }
-                FlushReports ();
-                isInitialised = true;
-            }
+        public string ReleaseStage { get; set; }
+
+        public List<string> NotifyReleaseStages { get; set; }
+
+        public List<string> Filters { get; set; }
+
+        public List<Type> IgnoredExceptions { get; set; }
+
+        public List<string> ProjectNamespaces { get; set; }
+
+        public string UserId {
+            get { return userInfo.Id; }
+            set { userInfo.Id = value; }
         }
 
-        private void OnApplicationDidEnterBackground (NSNotification notif)
-        {
-            inForeground = false;
-            sessionPauseTime = DateTime.UtcNow;
+        public string UserEmail {
+            get { return userInfo.Email; }
+            set { userInfo.Email = value; }
         }
 
-        private void OnApplicationDidReceiveMemoryWarning (NSNotification notif)
-        {
-            lastMemoryWarning = DateTime.UtcNow;
+        public string UserName {
+            get { return userInfo.Name; }
+            set { userInfo.Name = value; }
         }
 
-        private void OnBatteryChanged (NSNotification notif)
+        public void SetUser (string id, string email = null, string name = null)
         {
-            batteryLevel = UIDevice.CurrentDevice.BatteryLevel;
-            isCharging = UIDevice.CurrentDevice.BatteryState == UIDeviceBatteryState.Charging;
+            UserId = id;
+            UserEmail = email;
+            UserName = name;
         }
 
-        private void OnOrientationChanged (NSNotification notif)
+        private UserInfo GetUserInfo ()
         {
-            switch (UIDevice.CurrentDevice.Orientation) {
-            case UIDeviceOrientation.PortraitUpsideDown:
-                orientation = "portraitupsidedown";
-                break;
-            case UIDeviceOrientation.Portrait:
-                orientation = "portrait";
-                break;
-            case UIDeviceOrientation.LandscapeRight:
-                orientation = "landscaperight";
-                break;
-            case UIDeviceOrientation.LandscapeLeft:
-                orientation = "landscapeleft";
-                break;
-            case UIDeviceOrientation.FaceUp:
-                orientation = "faceup";
-                break;
-            case UIDeviceOrientation.FaceDown:
-                orientation = "facedown";
-                break;
-            case UIDeviceOrientation.Unknown:
-            default:
-                orientation = "unknown";
-                break;
+            if (String.IsNullOrEmpty (userInfo.Id)) {
+                userInfo.Id = DeviceId;
             }
+            return userInfo;
         }
 
-        protected override void OnUnhandledException (object sender, UnhandledExceptionEventArgs e)
+
+        public void AddToTab (string tabName, string key, object value)
         {
-            if (e.IsTerminating) {
-                // At this point in time we don't want to attempt an HTTP connection, thus we only store
-                // the event to disk and hope that the user opens the application again to send the
-                // errors to Bugsnag.
-                storeOnly = true;
-            }
-            base.OnUnhandledException (sender, e);
+            metadata.AddToTab (tabName, key, value);
         }
 
-        private string notifPrepend = null;
-        private string notifAppend = null;
-
-        private Stream MakeNotification (Stream[] jsonEventStreams)
+        public void ClearTab (string tabName)
         {
-            if (notifPrepend == null || notifAppend == null) {
-                var json = JsonConvert.SerializeObject (new Notification () {
-                    ApiKey = ApiKey,
-                    Notifier = Notifier,
-                    Events = new List<Event> (0),
-                });
-
-                // Find empty events array:
-                var idx = json.IndexOf ("[]");
-                notifPrepend = json.Substring (0, idx + 1);
-                notifAppend = json.Substring (idx + 1);
-            }
-
-            var stream = new CombiningStream ();
-            stream.Add (notifPrepend);
-            if (jsonEventStreams.Length > 1) {
-                var eventsStream = new CombiningStream (", ");
-                foreach (var eventStream in jsonEventStreams) {
-                    eventsStream.Add (eventStream);
-                }
-                stream.Add (eventsStream);
-            } else if (jsonEventStreams.Length == 1) {
-                stream.Add (jsonEventStreams [0]);
-            }
-            stream.Add (notifAppend);
-
-            return stream;
+            metadata.ClearTab (tabName);
         }
 
-        private Stream TryStoreEvent (Event e, string path)
+        public void TrackUser ()
         {
-            var json = new MemoryStream (
-                           System.Text.Encoding.UTF8.GetBytes (
-                               JsonConvert.SerializeObject (e)));
-
-            // Don't even try storing to disk when invalid path
-            if (path == null)
-                return json;
-
-            FileStream output = null;
-            try {
-                output = new FileStream (path, FileMode.CreateNew);
-                json.CopyTo (output);
-                output.Flush ();
-
-                output.Seek (0, SeekOrigin.Begin);
-                json.Dispose ();
-                return output;
-            } catch (IOException ex) {
-                LogError (String.Format ("Failed to store error to disk: {0}", ex));
-
-                // Failed to store to disk (full?), return json memory stream instead
-                if (output != null) {
-                    output.Dispose ();
-                }
-                json.Seek (0, SeekOrigin.Begin);
-                return json;
-            }
-        }
-
-        protected override void SendEvent (Event e)
-        {
-            // Determine file where to persist the error:
-            string path = null;
-            if (errorsCachePath != null) {
-                var file = String.Format ("{0}.json", DateTime.UtcNow.ToBinary ());
-                path = Path.Combine (errorsCachePath, file);
-            }
-
-            Stream eventStream = null;
-            Stream notifStream = null;
-            try {
-                // Serialize the event:
-                eventStream = TryStoreEvent (e, path);
-                if (storeOnly) {
-                    storeOnly = false;
-                    return;
-                }
-
-                // Combine into a valid payload:
-                notifStream = MakeNotification (new Stream[] { eventStream });
-
-                SendNotification (notifStream).ContinueWith ((t) => {
-                    try {
-                        if (t.Result) {
-                            // On successful response delete the stored file:
-                            try {
-                                File.Delete (path);
-                            } catch (Exception ex) {
-                                LogError (String.Format ("Failed to clean up stored event: {0}", ex));
-                            }
-                        }
-                    } finally {
-                        if (notifStream != null) {
-                            // Also disposes of the eventStream
-                            notifStream.Dispose ();
-                        }
-                    }
-                });
-            } catch (Exception ex) {
-                // Something went wrong...
-                LogError (String.Format ("Failed to send notification: {0}", ex));
-
-                if (notifStream != null) {
-                    // Also disposes of the eventStream
-                    notifStream.Dispose ();
-                } else if (eventStream != null) {
-                    eventStream.Dispose ();
-                }
-            }
-        }
-
-        private void FlushReports ()
-        {
-            if (errorsCachePath == null)
-                return;
-
-            var files = Directory.GetFiles (errorsCachePath);
-            if (files.Length == 0)
-                return;
-
-            var streams = new List<Stream> (files.Length);
-            foreach (var path in files) {
-                try {
-                    streams.Add (new FileStream (path, FileMode.Open));
-                } catch (Exception ex) {
-                    LogError (String.Format ("Failed to open cached file {0}: {1}", Path.GetFileName (path), ex));
-                }
-            }
-
-            Stream notifStream = null;
-            try {
-                // Make a single request to send all stored events
-                notifStream = MakeNotification (streams.ToArray ());
-
-                SendNotification (notifStream).ContinueWith ((t) => {
-                    try {
-                        // Remove cached files on success
-                        if (t.Result) {
-                            foreach (var path in files) {
-                                try {
-                                    File.Delete (path);
-                                } catch (Exception ex) {
-                                    LogError (String.Format ("Failed to clean up stored event {0}: {1}",
-                                        Path.GetFileName (path), ex));
-                                }
-                            }
-                        }
-                    } finally {
-                        if (notifStream != null) {
-                            notifStream.Dispose ();
-                        }
-                    }
-                });
-            } catch (Exception ex) {
-                // Something went wrong...
-                LogError (String.Format ("Failed to send notification: {0}", ex));
-
-                if (notifStream != null) {
-                    // Notification stream closes all other streams:
-                    notifStream.Dispose ();
-                } else {
-                    foreach (var stream in streams) {
-                        stream.Dispose ();
-                    }
-                }
-                streams.Clear ();
-            }
-        }
-
-        private Task<bool> SendNotification (Stream stream)
-        {
-            var httpClient = MakeHttpClient ();
-
-            var req = new HttpRequestMessage () {
-                Method = HttpMethod.Post,
-                RequestUri = BaseUrl,
-                Content = new StreamContent (stream),
-            };
-            req.Content.Headers.ContentType = new MediaTypeHeaderValue ("application/json");
-
-            return httpClient.SendAsync (req).ContinueWith ((t) => {
-                try {
-                    var resp = t.Result;
-                    if (resp.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
-                        LogError ("Failed to send notification due to invalid API key.");
-                    } else if (resp.StatusCode == System.Net.HttpStatusCode.BadRequest) {
-                        LogError ("Failed to send notification due to invalid payload.");
-                    } else {
-                        return true;
-                    }
-                } catch (Exception ex) {
-                    // Keep the stored file, it will be retried on next app start
-                    LogError (String.Format ("Failed to send notification: {0}", ex));
-                } finally {
-                    httpClient.Dispose ();
-                }
-
-                return false;
+            notifier.TrackUser (new UserMetrics () {
+                ApiKey = apiKey,
+                User = GetUserInfo (),
+                App = state.GetApplicationInfo (),
+                System = state.GetSystemInfo (),
             });
         }
 
-        protected override void LogError (string msg)
+        public void Notify (Exception e, ErrorSeverity severity = ErrorSeverity.Error, Metadata extraMetadata = null)
         {
-            Console.WriteLine ("[{0}] {1}", Tag, msg);
-        }
+            if (!ShouldNotify)
+                return;
+            if (IgnoredExceptions != null && IgnoredExceptions.Contains (e.GetType ()))
+                return;
 
-        protected override UserInfo GetUserInfo ()
-        {
-            var val = base.GetUserInfo ();
-            if (String.IsNullOrEmpty (val.Id)) {
-                val.Id = DeviceId;
+            var md = new Metadata (metadata);
+            if (extraMetadata != null) {
+                md.Merge (extraMetadata);
             }
-            return val;
+
+            notifier.Notify (new Event () {
+                User = GetUserInfo (),
+                App = state.GetApplicationInfo (),
+                AppState = state.GetApplicationState (),
+                System = state.GetSystemInfo (),
+                SystemState = state.GetSystemState (),
+                Context = Context,
+                Severity = severity,
+                Exceptions = exceptionConverter.Convert (e),
+                Metadata = md,
+            });
         }
 
-        protected override ApplicationInfo GetAppInfo ()
+        private void OnApplicationDidBecomeActive (NSNotification notif)
         {
-            if (appInfo == null) {
-                var bundle = NSBundle.MainBundle;
-                var version = (string)(NSString)bundle.ObjectForInfoDictionary ("CFBundleShortVersionString");
-                var bundleVersion = (string)(NSString)bundle.ObjectForInfoDictionary ("CFBundleVersion");
-                var name = (string)(NSString)bundle.ObjectForInfoDictionary ("CFBundleDisplayName");
-
-                appInfo = new Bugsnag.Data.ApplicationInfo () {
-                    Id = bundle.BundleIdentifier,
-                    Version = version,
-                    BundleVersion = bundleVersion,
-                    Name = name,
-                    ReleaseStage = ReleaseStage,
-                };
+            if (sendMetrics) {
+                TrackUser ();
             }
-            return appInfo;
-        }
+            notifier.Flush ();
 
-        protected override ApplicationState GetAppState ()
-        {
-            return new Bugsnag.Data.ApplicationState () {
-                SessionLength = DateTime.UtcNow - sessionStartTime,
-                TimeSinceMemoryWarning = DateTime.UtcNow - lastMemoryWarning,
-                InForeground = inForeground,
-                CurrentScreen = AppleInfo.TopMostViewController,
-                RunningTime = DateTime.UtcNow - appStartTime,
-                // TODO: Implement memory usage recording
-            };
-        }
-
-        protected override SystemInfo GetSystemInfo ()
-        {
-            if (systemInfo == null) {
-                systemInfo = new Bugsnag.Data.SystemInfo () {
-                    Id = DeviceId,
-                    Manufacturer = "Apple",
-                    Model = AppleInfo.Model,
-                    ScreenDensity = UIScreen.MainScreen.Scale,
-                    ScreenResolution = AppleInfo.ScreenResolution,
-                    TotalMemory = AppleInfo.TotalMemory,
-                    OperatingSystem = "iOS",
-                    OperatingSystemVersion = NSProcessInfo.ProcessInfo.OperatingSystemVersionString,
-                    IsJailbroken = UIApplication.SharedApplication.CanOpenUrl (new NSUrl ("cydia://")),
-                    Locale = NSLocale.CurrentLocale.LocaleIdentifier,
-                    DiskSize = AppleInfo.FileSystemAttributes.Size,
-                };
+            // We're not interested in any more became active events
+            if (notifApplicationDidBecomeActive != null) {
+                NSNotificationCenter.DefaultCenter.RemoveObserver (notifApplicationDidBecomeActive);
+                notifApplicationDidBecomeActive = null;
             }
-            return systemInfo;
         }
 
-        protected override SystemState GetSystemState ()
-        {
-            return new Bugsnag.Data.SystemState () {
-                FreeMemory = AppleInfo.FreeMemory,
-                Orientation = orientation,
-                BatteryLevel = batteryLevel,
-                IsCharging = isCharging,
-                AvailableDiskSpace = AppleInfo.FileSystemAttributes.FreeSize,
-                // TODO: Implement LocationStatus reporting
-                // TODO: Implement NetworkStatus reporting
-            };
-        }
-
-        protected override ExceptionInfo ConvertException (Exception ex)
-        {
-            // TODO: Implement special handling for MonoTouchException
-            return base.ConvertException (ex);
-        }
-
-        private static string MakeCachePath ()
+        private static string MakeErrorCacheDir ()
         {
             var path = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "bugsnag-events");
             if (!Directory.Exists (path)) {
@@ -480,97 +218,6 @@ namespace Bugsnag
             }
 
             return path;
-        }
-
-        public static class AppleInfo
-        {
-            public static NSFileSystemAttributes FileSystemAttributes {
-                get {
-                    var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User, true);
-                    return NSFileManager.DefaultManager.GetFileSystemAttributes (paths.Last ());
-                }
-            }
-
-            public static string Model {
-                get {
-                    long size = 0;
-                    if (sysctlbyname ("hw.machine", null, ref size, IntPtr.Zero, 0) == 0) {
-                        var buf = new byte[size];
-                        if (sysctlbyname ("hw.machine", buf, ref size, IntPtr.Zero, 0) == 0) {
-                            return Encoding.UTF8.GetString (buf, 0, (int)size);
-                        }
-                    }
-                    return null;
-                }
-            }
-
-            public static ulong TotalMemory {
-                get {
-                    var buf = new byte[sizeof(ulong)];
-                    var size = buf.LongLength;
-                    if (sysctlbyname ("hw.memsize", buf, ref size, IntPtr.Zero, 0) == 0) {
-                        return BitConverter.ToUInt64 (buf, 0);
-                    }
-                    return 0;
-                }
-            }
-
-            public static ulong FreeMemory {
-                get {
-                    ulong pageSize;
-                    ulong pagesFree;
-
-                    var buf = new byte[sizeof(ulong)];
-                    var size = buf.LongLength;
-                    if (sysctlbyname ("vm.page_free_count", buf, ref size, IntPtr.Zero, 0) == 0) {
-                        pagesFree = BitConverter.ToUInt64 (buf, 0);
-                        if (sysctlbyname ("hw.pagesize", buf, ref size, IntPtr.Zero, 0) == 0) {
-                            pageSize = BitConverter.ToUInt64 (buf, 0);
-                            return pagesFree * pageSize;
-                        }
-                    }
-                    return 0;
-                }
-            }
-
-            public static string ScreenResolution {
-                get {
-                    var size = UIScreen.MainScreen.Bounds.Size;
-                    var scale = UIScreen.MainScreen.Scale;
-                    return String.Format ("{0}x{1}", (int)(size.Width * scale), (int)(size.Height * scale)); 
-                }
-            }
-
-            [DllImport (MonoTouch.Constants.SystemLibrary)]
-            static internal extern int sysctlbyname ([MarshalAs (UnmanagedType.LPStr)] string property, byte[] output, ref long oldLen, IntPtr newp, uint newlen);
-
-            public static string TopMostViewController {
-                get {
-                    UIViewController viewController = UIApplication.SharedApplication.KeyWindow.RootViewController;
-
-                    if (viewController is UINavigationController) {
-                        viewController = ((UINavigationController)viewController).VisibleViewController;
-                    }
-
-                    var depth = 0;
-
-                    while (viewController != null && depth <= 30) {
-                        var presentedController = viewController.PresentedViewController;
-
-                        if (presentedController == null) {
-                            return viewController.GetType ().ToString ();
-                        } else if (presentedController is UINavigationController) {
-                            viewController = ((UINavigationController)presentedController).VisibleViewController;
-                        } else {
-                            viewController = presentedController;
-                        }
-
-                        depth++;
-                    }
-
-                    return viewController != null ? viewController.GetType ().ToString () : null;
-                }
-            }
         }
     }
 }

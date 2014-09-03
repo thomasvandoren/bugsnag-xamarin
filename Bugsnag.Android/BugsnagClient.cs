@@ -19,7 +19,6 @@ namespace Bugsnag
         private readonly ActivityTracker activityTracker;
         private readonly ExceptionConverter exceptionConverter;
         private readonly Notifier notifier;
-        private readonly Context androidContext;
         private readonly UserInfo userInfo = new UserInfo ();
         private readonly Metadata metadata = new Metadata ();
         private IDisposable[] interceptors;
@@ -32,9 +31,10 @@ namespace Bugsnag
             if (apiKey == null)
                 throw new ArgumentNullException ("apiKey");
 
+            context = context.ApplicationContext;
+
             this.apiKey = apiKey;
             sendMetrics = enableMetrics;
-            androidContext = context.ApplicationContext;
             ReleaseStage = GuessReleaseStage (context);
 
             // Install exception handlers

@@ -1,11 +1,13 @@
+using Bugsnag.Json;
+using MonoTouch.UIKit;
 using Newtonsoft.Json;
 
 namespace Bugsnag.Data
 {
     internal class TouchSystemState : SystemState
     {
-        [JsonProperty ("orientation")]
-        public string Orientation { get; set; }
+        [JsonProperty ("orientation"), JsonConverter (typeof(OrientationConverter))]
+        public UIDeviceOrientation Orientation { get; set; }
 
         [JsonProperty ("batteryLevel")]
         public float BatteryLevel { get; set; }

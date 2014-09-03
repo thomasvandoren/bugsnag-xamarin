@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Bugsnag.Json
 {
-    public class OrientationConverter : JsonConverter
+    internal class OrientationConverter : JsonConverter
     {
         public override void WriteJson (JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -44,4 +44,3 @@ namespace Bugsnag.Json
         }
     }
 }
-

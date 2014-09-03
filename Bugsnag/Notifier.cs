@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Bugsnag.Data;
-using Bugsnag.IO;
 using Newtonsoft.Json;
+using Bugsnag.IO;
 
 namespace Bugsnag
 {
@@ -279,7 +279,7 @@ namespace Bugsnag
             #if __ANDROID__
             Android.Util.Log.Error (BugsnagClient.Tag, msg);
             #else
-            Console.WriteLine(msg);
+            Console.WriteLine ("[{0}] {1}", BugsnagClient.Tag, msg);
             #endif
         }
     }
