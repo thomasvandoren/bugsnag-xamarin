@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Bugsnag.IO
 {
-    public class CombiningStream : Stream
+    internal class CombiningStream : Stream
     {
         private readonly byte[] sepData;
         private readonly List<Stream> streams = new List<Stream> ();

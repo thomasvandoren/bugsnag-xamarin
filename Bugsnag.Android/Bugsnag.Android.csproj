@@ -51,16 +51,26 @@
     <Compile Include="Data\AndroidApplicationState.cs" />
     <Compile Include="Data\AndroidSystemInfo.cs" />
     <Compile Include="Data\AndroidSystemState.cs" />
-    <Compile Include="Interceptor\AppDomainInterceptor.cs" />
-    <Compile Include="Interceptor\TaskSchedulerInterceptor.cs" />
     <Compile Include="BugsnagClient.cs" />
     <Compile Include="Interceptor\AndroidInterceptor.cs" />
     <Compile Include="StateReporter.cs" />
-    <Compile Include="StateCacher.cs" />
     <Compile Include="ActivityTracker.cs" />
     <Compile Include="ExceptionConverter.cs" />
-    <Compile Include="Notifier.cs" />
-    <Compile Include="IO\CombiningStream.cs" />
+    <Compile Include="..\Bugsnag\Notifier.cs">
+      <Link>Notifier.cs</Link>
+    </Compile>
+    <Compile Include="..\Bugsnag\StateCacher.cs">
+      <Link>StateCacher.cs</Link>
+    </Compile>
+    <Compile Include="..\Bugsnag\IO\CombiningStream.cs">
+      <Link>IO\CombiningStream.cs</Link>
+    </Compile>
+    <Compile Include="..\Bugsnag\Interceptor\AppDomainInterceptor.cs">
+      <Link>Interceptor\AppDomainInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Bugsnag\Interceptor\TaskSchedulerInterceptor.cs">
+      <Link>Interceptor\TaskSchedulerInterceptor.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -71,9 +81,5 @@
       <Project>{CDA61B61-8B8F-4271-8910-431D36B0D01A}</Project>
       <Name>Bugsnag</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interceptor\" />
-    <Folder Include="IO\" />
   </ItemGroup>
 </Project>

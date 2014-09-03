@@ -57,6 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="BugsnagClient.cs" />
+    <None Include="Interceptor\AppDomainInterceptor.cs" />
+    <None Include="Interceptor\TaskSchedulerInterceptor.cs" />
+    <None Include="IO\CombiningStream.cs" />
+    <None Include="Notifier.cs" />
+    <None Include="StateCacher.cs" />
   </ItemGroup>
 </Project>
