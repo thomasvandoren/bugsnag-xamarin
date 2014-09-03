@@ -20,7 +20,7 @@ namespace Bugsnag
             if (client == null)
                 throw new ArgumentNullException ("client");
             if (ctx == null)
-                throw new ArgumentNullException ("context");
+                throw new ArgumentNullException ("ctx");
 
             this.client = client;
             this.ctx = ctx;
