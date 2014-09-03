@@ -36,6 +36,7 @@ namespace Bugsnag
             this.apiKey = apiKey;
             sendMetrics = enableMetrics;
             ReleaseStage = GuessReleaseStage (context);
+            AutoNotify = true;
 
             // Install exception handlers
             interceptors = new IDisposable[] {
