@@ -7,8 +7,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Content;
-using Android.Util;
 using Bugsnag.Data;
 using Bugsnag.IO;
 using Newtonsoft.Json;
@@ -25,19 +23,19 @@ namespace Bugsnag
         };
 
         private readonly BugsnagClient client;
-        private readonly string errorsCachePath;
+        private readonly string cacheDir;
         private string notifPrepend = null;
         private string notifAppend = null;
 
-        public Notifier (BugsnagClient client, Context context)
+        public Notifier (BugsnagClient client, string cacheDir)
         {
             if (client == null)
                 throw new ArgumentNullException ("client");
-            if (context == null)
-                throw new ArgumentNullException ("context");
+            if (cacheDir == null)
+                throw new ArgumentNullException ("cacheDir");
 
             this.client = client;
-            errorsCachePath = MakeCachePath (context);
+            this.cacheDir = cacheDir;
         }
 
         public bool StoreOnly { get; set; }
@@ -70,7 +68,7 @@ namespace Bugsnag
                         await httpClient.SendAsync (req);
                     }
                 } catch (Exception exc) {
-                    Log.Error (BugsnagClient.Tag, String.Format ("Failed to track user: {0}", exc));
+                    Log (String.Format ("Failed to track user: {0}", exc));
                 }
             });
         }
@@ -79,9 +77,9 @@ namespace Bugsnag
         {
             // Determine file where to persist the error:
             string path = null;
-            if (errorsCachePath != null) {
+            if (cacheDir != null) {
                 var file = String.Format ("{0}.json", DateTime.UtcNow.ToBinary ());
-                path = Path.Combine (errorsCachePath, file);
+                path = Path.Combine (cacheDir, file);
             }
 
             Stream eventStream = null;
@@ -104,7 +102,7 @@ namespace Bugsnag
                             try {
                                 File.Delete (path);
                             } catch (Exception ex) {
-                                Log.Error (BugsnagClient.Tag, String.Format ("Failed to clean up stored event: {0}", ex));
+                                Log (String.Format ("Failed to clean up stored event: {0}", ex));
                             }
                         }
                     } finally {
@@ -116,7 +114,7 @@ namespace Bugsnag
                 });
             } catch (Exception ex) {
                 // Something went wrong...
-                Log.Error (BugsnagClient.Tag, String.Format ("Failed to send notification: {0}", ex));
+                Log (String.Format ("Failed to send notification: {0}", ex));
 
                 if (notifStream != null) {
                     // Also disposes of the eventStream
@@ -177,7 +175,7 @@ namespace Bugsnag
                 json.Dispose ();
                 return output;
             } catch (IOException ex) {
-                Log.Error (BugsnagClient.Tag, String.Format ("Failed to store error to disk: {0}", ex));
+                Log (String.Format ("Failed to store error to disk: {0}", ex));
 
                 // Failed to store to disk (full?), return json memory stream instead
                 if (output != null) {
@@ -190,10 +188,10 @@ namespace Bugsnag
 
         public async void Flush ()
         {
-            if (errorsCachePath == null)
+            if (cacheDir == null)
                 return;
 
-            var files = Directory.GetFiles (errorsCachePath);
+            var files = Directory.GetFiles (cacheDir);
             if (files.Length == 0)
                 return;
 
@@ -202,7 +200,7 @@ namespace Bugsnag
                 try {
                     streams.Add (new FileStream (path, FileMode.Open));
                 } catch (Exception ex) {
-                    Log.Error (BugsnagClient.Tag, String.Format ("Failed to open cached file {0}: {1}", Path.GetFileName (path), ex));
+                    Log (String.Format ("Failed to open cached file {0}: {1}", Path.GetFileName (path), ex));
                 }
             }
 
@@ -219,14 +217,14 @@ namespace Bugsnag
                         try {
                             File.Delete (path);
                         } catch (Exception ex) {
-                            Log.Error (BugsnagClient.Tag, String.Format ("Failed to clean up stored event {0}: {1}",
+                            Log (String.Format ("Failed to clean up stored event {0}: {1}",
                                 Path.GetFileName (path), ex));
                         }
                     }
                 }
             } catch (Exception ex) {
                 // Something went wrong...
-                Log.Error (BugsnagClient.Tag, String.Format ("Failed to send notification: {0}", ex));
+                Log (String.Format ("Failed to send notification: {0}", ex));
 
                 if (notifStream != null) {
                     // Notification stream closes all other streams:
@@ -260,15 +258,15 @@ namespace Bugsnag
                 var resp = await httpClient.SendAsync (req).ConfigureAwait (false);
 
                 if (resp.StatusCode == HttpStatusCode.Unauthorized) {
-                    Log.Error (BugsnagClient.Tag, "Failed to send notification due to invalid API key.");
+                    Log ("Failed to send notification due to invalid API key.");
                 } else if (resp.StatusCode == HttpStatusCode.BadRequest) {
-                    Log.Error (BugsnagClient.Tag, "Failed to send notification due to invalid payload.");
+                    Log ("Failed to send notification due to invalid payload.");
                 } else {
                     return true;
                 }
             } catch (Exception ex) {
                 // Keep the stored file, it will be retried on next app start
-                Log.Error (BugsnagClient.Tag, String.Format ("Failed to send notification: {0}", ex));
+                Log (String.Format ("Failed to send notification: {0}", ex));
             } finally {
                 httpClient.Dispose ();
             }
@@ -276,19 +274,13 @@ namespace Bugsnag
             return false;
         }
 
-        private static string MakeCachePath (Context ctx)
+        private static void Log (string msg)
         {
-            var path = Path.Combine (ctx.CacheDir.AbsolutePath, "bugsnag-events");
-            if (!Directory.Exists (path)) {
-                try {
-                    Directory.CreateDirectory (path);
-                } catch (Exception ex) {
-                    Log.Error (BugsnagClient.Tag, String.Format ("Failed to create cache dir: {0}", ex));
-                    path = null;
-                }
-            }
-
-            return path;
+            #if __ANDROID__
+            Android.Util.Log.Error (BugsnagClient.Tag, msg);
+            #else
+            Console.WriteLine(msg);
+            #endif
         }
     }
 }

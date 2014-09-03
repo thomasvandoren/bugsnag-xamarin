@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Android.Content;
 using Android.Util;
@@ -46,7 +47,7 @@ namespace Bugsnag
             state = new StateCacher (new StateReporter (this, context));
             activityTracker = new ActivityTracker ();
             exceptionConverter = new ExceptionConverter (this);
-            notifier = new Notifier (this, context);
+            notifier = new Notifier (this, MakeErrorCacheDir (context));
         }
 
         ~BugsnagClient ()
@@ -225,6 +226,21 @@ namespace Bugsnag
                 Log.Warn (Tag, ex, "Failed automatic release stage detection.");
             }
             return debuggable ? "development" : "production";
+        }
+
+        private static string MakeErrorCacheDir (Context ctx)
+        {
+            var path = Path.Combine (ctx.CacheDir.AbsolutePath, "bugsnag-events");
+            if (!Directory.Exists (path)) {
+                try {
+                    Directory.CreateDirectory (path);
+                } catch (Exception ex) {
+                    Log.Error (BugsnagClient.Tag, String.Format ("Failed to create cache dir: {0}", ex));
+                    path = null;
+                }
+            }
+
+            return path;
         }
     }
 }
