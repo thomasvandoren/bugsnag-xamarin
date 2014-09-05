@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Bugsnag.Data;
+using Bugsnag.Util;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using Bugsnag.Interceptor;
@@ -194,6 +195,7 @@ namespace Bugsnag
 
         private void OnApplicationDidBecomeActive (NSNotification notif)
         {
+            Linker.CheckStripped ();
             if (sendMetrics) {
                 TrackUser ();
             }

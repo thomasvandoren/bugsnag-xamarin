@@ -47,6 +47,7 @@
     <Compile Include="Json\JObjectExtensions.cs" />
     <Compile Include="Json\TimeSpanConverter.cs" />
     <Compile Include="IBugsnagClient.cs" />
+    <Compile Include="Util\Linker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -56,5 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Util\" />
   </ItemGroup>
 </Project>

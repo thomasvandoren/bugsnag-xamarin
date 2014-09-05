@@ -5,6 +5,7 @@ using System.Linq;
 using Android.Content;
 using Android.Util;
 using Bugsnag.Data;
+using Bugsnag.Util;
 using Bugsnag.Interceptor;
 
 namespace Bugsnag
@@ -199,6 +200,7 @@ namespace Bugsnag
             Context = activityTracker.TopActivity;
 
             if (!isInitialised) {
+                Linker.CheckStripped ();
                 if (sendMetrics) {
                     TrackUser ();
                 }
