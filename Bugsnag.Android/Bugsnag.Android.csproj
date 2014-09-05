@@ -71,6 +71,9 @@
     <Compile Include="..\Bugsnag\Interceptor\TaskSchedulerInterceptor.cs">
       <Link>Interceptor\TaskSchedulerInterceptor.cs</Link>
     </Compile>
+    <Compile Include="..\Bugsnag\Util\Log.cs">
+      <Link>Util\Log.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

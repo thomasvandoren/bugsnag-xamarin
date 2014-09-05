@@ -12,8 +12,6 @@ namespace Bugsnag
 {
     public class BugsnagClient : IBugsnagClient
     {
-        internal const string Tag = "Bugsnag";
-
         private readonly string apiKey;
         private readonly bool sendMetrics;
         private readonly StateCacher state;
@@ -215,7 +213,7 @@ namespace Bugsnag
                 try {
                     Directory.CreateDirectory (path);
                 } catch (Exception ex) {
-                    Console.WriteLine ("[{0}] Failed to create cache dir: {1}", Tag, ex);
+                    Log.WriteLine ("Failed to create cache dir: {0}", ex);
                     path = null;
                 }
             }

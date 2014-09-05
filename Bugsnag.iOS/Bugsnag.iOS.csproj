@@ -63,6 +63,9 @@
     <Compile Include="..\Bugsnag\IO\CombiningStream.cs">
       <Link>IO\CombiningStream.cs</Link>
     </Compile>
+    <Compile Include="..\Bugsnag\Util\Log.cs">
+      <Link>Util\Log.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>

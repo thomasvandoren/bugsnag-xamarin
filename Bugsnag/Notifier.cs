@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Bugsnag.Data;
 using Newtonsoft.Json;
 using Bugsnag.IO;
+using Bugsnag.Util;
 
 namespace Bugsnag
 {
@@ -68,7 +69,7 @@ namespace Bugsnag
                         await httpClient.SendAsync (req);
                     }
                 } catch (Exception exc) {
-                    Log (String.Format ("Failed to track user: {0}", exc));
+                    Log.WriteLine ("Failed to track user: {0}", exc);
                 }
             });
         }
@@ -102,7 +103,7 @@ namespace Bugsnag
                             try {
                                 File.Delete (path);
                             } catch (Exception ex) {
-                                Log (String.Format ("Failed to clean up stored event: {0}", ex));
+                                Log.WriteLine ("Failed to clean up stored event: {0}", ex);
                             }
                         }
                     } finally {
@@ -114,7 +115,7 @@ namespace Bugsnag
                 });
             } catch (Exception ex) {
                 // Something went wrong...
-                Log (String.Format ("Failed to send notification: {0}", ex));
+                Log.WriteLine ("Failed to send notification: {0}", ex);
 
                 if (notifStream != null) {
                     // Also disposes of the eventStream
@@ -175,7 +176,7 @@ namespace Bugsnag
                 json.Dispose ();
                 return output;
             } catch (IOException ex) {
-                Log (String.Format ("Failed to store error to disk: {0}", ex));
+                Log.WriteLine ("Failed to store error to disk: {0}", ex);
 
                 // Failed to store to disk (full?), return json memory stream instead
                 if (output != null) {
@@ -200,7 +201,7 @@ namespace Bugsnag
                 try {
                     streams.Add (new FileStream (path, FileMode.Open));
                 } catch (Exception ex) {
-                    Log (String.Format ("Failed to open cached file {0}: {1}", Path.GetFileName (path), ex));
+                    Log.WriteLine ("Failed to open cached file {0}: {1}", Path.GetFileName (path), ex);
                 }
             }
 
@@ -217,14 +218,14 @@ namespace Bugsnag
                         try {
                             File.Delete (path);
                         } catch (Exception ex) {
-                            Log (String.Format ("Failed to clean up stored event {0}: {1}",
-                                Path.GetFileName (path), ex));
+                            Log.WriteLine ("Failed to clean up stored event {0}: {1}",
+                                Path.GetFileName (path), ex);
                         }
                     }
                 }
             } catch (Exception ex) {
                 // Something went wrong...
-                Log (String.Format ("Failed to send notification: {0}", ex));
+                Log.WriteLine ("Failed to send notification: {0}", ex);
 
                 if (notifStream != null) {
                     // Notification stream closes all other streams:
@@ -258,29 +259,20 @@ namespace Bugsnag
                 var resp = await httpClient.SendAsync (req).ConfigureAwait (false);
 
                 if (resp.StatusCode == HttpStatusCode.Unauthorized) {
-                    Log ("Failed to send notification due to invalid API key.");
+                    Log.WriteLine ("Failed to send notification due to invalid API key.");
                 } else if (resp.StatusCode == HttpStatusCode.BadRequest) {
-                    Log ("Failed to send notification due to invalid payload.");
+                    Log.WriteLine ("Failed to send notification due to invalid payload.");
                 } else {
                     return true;
                 }
             } catch (Exception ex) {
                 // Keep the stored file, it will be retried on next app start
-                Log (String.Format ("Failed to send notification: {0}", ex));
+                Log.WriteLine ("Failed to send notification: {0}", ex);
             } finally {
                 httpClient.Dispose ();
             }
 
             return false;
-        }
-
-        private static void Log (string msg)
-        {
-            #if __ANDROID__
-            Android.Util.Log.Error (BugsnagClient.Tag, msg);
-            #else
-            Console.WriteLine ("[{0}] {1}", BugsnagClient.Tag, msg);
-            #endif
         }
     }
 }

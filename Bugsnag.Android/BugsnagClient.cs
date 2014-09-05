@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Android.Content;
-using Android.Util;
 using Bugsnag.Data;
 using Bugsnag.Util;
 using Bugsnag.Interceptor;
@@ -12,8 +11,6 @@ namespace Bugsnag
 {
     public class BugsnagClient : IBugsnagClient
     {
-        internal const string Tag = "Bugsnag";
-
         private readonly string apiKey;
         private readonly bool sendMetrics;
         private readonly StateCacher state;
@@ -226,7 +223,7 @@ namespace Bugsnag
                 var app = ctx.PackageManager.GetApplicationInfo (ctx.PackageName, 0);
                 debuggable = (app.Flags & Android.Content.PM.ApplicationInfoFlags.Debuggable) != 0;
             } catch (Java.Lang.Throwable ex) {
-                Log.Warn (Tag, ex, "Failed automatic release stage detection.");
+                Log.WriteLine ("Failed automatic release stage detection: {0}", ex);
             }
             return debuggable ? "development" : "production";
         }
@@ -238,7 +235,7 @@ namespace Bugsnag
                 try {
                     Directory.CreateDirectory (path);
                 } catch (Exception ex) {
-                    Log.Error (BugsnagClient.Tag, String.Format ("Failed to create cache dir: {0}", ex));
+                    Log.WriteLine ("Failed to create cache dir: {0}", ex);
                     path = null;
                 }
             }
