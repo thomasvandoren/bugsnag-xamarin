@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="IO\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -96,7 +97,15 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="UnitTestAppDelegate.cs" />
-    <Compile Include="TestsSample.cs" />
+    <Compile Include="..\Tests\IO\CombiningStreamTest.cs">
+      <Link>IO\CombiningStreamTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Bugsnag.iOS\Bugsnag.iOS.csproj">
+      <Project>{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}</Project>
+      <Name>Bugsnag.iOS</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

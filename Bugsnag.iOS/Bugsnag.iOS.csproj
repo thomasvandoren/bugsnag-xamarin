@@ -66,6 +66,7 @@
     <Compile Include="..\Bugsnag\Util\Log.cs">
       <Link>Util\Log.cs</Link>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -76,5 +77,8 @@
       <Project>{CDA61B61-8B8F-4271-8910-431D36B0D01A}</Project>
       <Name>Bugsnag</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>
