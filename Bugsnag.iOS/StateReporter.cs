@@ -141,30 +141,43 @@ namespace Bugsnag
 
         private static string TopMostViewController {
             get {
-                UIViewController viewController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+                return InvokeOnMainThread (delegate {
+                    UIViewController viewController = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
-                if (viewController is UINavigationController) {
-                    viewController = ((UINavigationController)viewController).VisibleViewController;
-                }
-
-                var depth = 0;
-
-                while (viewController != null && depth <= 30) {
-                    var presentedController = viewController.PresentedViewController;
-
-                    if (presentedController == null) {
-                        return viewController.GetType ().ToString ();
-                    } else if (presentedController is UINavigationController) {
-                        viewController = ((UINavigationController)presentedController).VisibleViewController;
-                    } else {
-                        viewController = presentedController;
+                    if (viewController is UINavigationController) {
+                        viewController = ((UINavigationController)viewController).VisibleViewController;
                     }
 
-                    depth++;
-                }
+                    var depth = 0;
 
-                return viewController != null ? viewController.GetType ().ToString () : null;
+                    while (viewController != null && depth <= 30) {
+                        var presentedController = viewController.PresentedViewController;
+
+                        if (presentedController == null) {
+                            return viewController.GetType ().ToString ();
+                        } else if (presentedController is UINavigationController) {
+                            viewController = ((UINavigationController)presentedController).VisibleViewController;
+                        } else {
+                            viewController = presentedController;
+                        }
+
+                        depth++;
+                    }
+
+                    return viewController != null ? viewController.GetType ().ToString () : null;
+                });
             }
+        }
+
+        private static T InvokeOnMainThread<T> (Func<T> action)
+        {
+            T ret = default(T);
+
+            UIApplication.SharedApplication.InvokeOnMainThread (delegate {
+                ret = action ();
+            });
+
+            return ret;
         }
     }
 }
