@@ -27,5 +27,8 @@
     <!-- Xamarin.iOS -->
     <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/MonoTouch10/Bugsnag.dll" />
     <file src="Bugsnag.iOS/bin/Release/Bugsnag.iOS.dll" target="lib/MonoTouch10/Bugsnag.iOS.dll" />
+
+    <!-- NET 4.5 -->
+    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/net45/Bugsnag.dll" />
   </files>
 </package>
