@@ -206,7 +206,7 @@ namespace Bugsnag
             }
         }
 
-        private static string MakeErrorCacheDir ()
+        internal static string MakeErrorCacheDir ()
         {
             var path = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "bugsnag-events");
             if (!Directory.Exists (path)) {

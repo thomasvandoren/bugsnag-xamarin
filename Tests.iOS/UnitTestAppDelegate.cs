@@ -33,7 +33,11 @@ namespace Bugsnag.Test
             // register every tests included in the main application/assembly
             runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
 
-            window.RootViewController = new UINavigationController (runner.GetViewController ());
+            if (runner.AutoStart) {
+                window.RootViewController = new UINavigationController (runner.GetViewController ());
+            } else {
+                window.RootViewController = new UINavigationController (new CrashTestViewController (runner));
+            }
             
             // make the window visible
             window.MakeKeyAndVisible ();

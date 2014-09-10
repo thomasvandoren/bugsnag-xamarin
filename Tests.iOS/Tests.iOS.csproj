@@ -100,6 +100,10 @@
     <Compile Include="..\Tests\IO\CombiningStreamTest.cs">
       <Link>IO\CombiningStreamTest.cs</Link>
     </Compile>
+    <Compile Include="CrashTestViewController.cs" />
+    <Compile Include="CrashTestViewController.designer.cs">
+      <DependentUpon>CrashTestViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -107,5 +111,12 @@
       <Project>{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}</Project>
       <Name>Bugsnag.iOS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Bugsnag\Bugsnag.csproj">
+      <Project>{CDA61B61-8B8F-4271-8910-431D36B0D01A}</Project>
+      <Name>Bugsnag</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="CrashTestViewController.xib" />
   </ItemGroup>
 </Project>
