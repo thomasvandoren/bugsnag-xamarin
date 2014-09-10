@@ -10,6 +10,7 @@ namespace Bugsnag.Data
         public TimeSpan SessionLength { get; set; }
 
         [JsonProperty ("timeSinceMemoryWarning", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter (typeof(TimeSpanConverter))]
         public TimeSpan? TimeSinceMemoryWarning { get; set; }
 
         [JsonProperty ("inForeground")]
