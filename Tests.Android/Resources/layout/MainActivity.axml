@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <Button
+        android:text="Unit tests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/UnitTestButton" />
+    <Button
+        android:text="Test managed exception"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TestManagedButton" />
+    <Button
+        android:text="Test Java exception"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TestJavaButton" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+    <TextView
+        android:text="No errors found!"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/StatusTextView"
+        android:gravity="center"
+        android:background="@android:color/holo_red_dark"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white" />
+</LinearLayout>

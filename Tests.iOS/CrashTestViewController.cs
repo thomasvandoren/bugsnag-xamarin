@@ -54,14 +54,14 @@ namespace Bugsnag.Test
 
         private void SetupBugsnag ()
         {
-            if (bugsnagClient != null)
-                return;
+            if (bugsnagClient != null) {
+                bugsnagClient = new BugsnagClient ("testing", false) {
+                    DeviceId = Guid.NewGuid ().ToString (),
+                    ProjectNamespaces = new List<string> () { "Bugsnag." },
+                    ReleaseStage = "development",
+                };
+            }
 
-            bugsnagClient = new BugsnagClient ("testing", false) {
-                DeviceId = Guid.NewGuid ().ToString (),
-                ProjectNamespaces = new List<string> () { "Bugsnag." },
-                ReleaseStage = "development",
-            };
             bugsnagClient.Notifier.StoreOnly = true;
         }
 

@@ -51,6 +51,7 @@
     <Compile Include="..\Tests\IO\CombiningStreamTest.cs">
       <Link>IO\CombiningStreamTest.cs</Link>
     </Compile>
+    <Compile Include="NUnitActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -59,15 +60,24 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\layout\MainActivity.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="IO\" />
+    <Folder Include="Resources\layout\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bugsnag.Android\Bugsnag.Android.csproj">
       <Project>{788BF660-D3A3-4FE4-8EA0-9102557A2D86}</Project>
       <Name>Bugsnag.Android</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Bugsnag\Bugsnag.csproj">
+      <Project>{CDA61B61-8B8F-4271-8910-431D36B0D01A}</Project>
+      <Name>Bugsnag</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidJavaSource Include="CrashingJavaActivity.java" />
   </ItemGroup>
 </Project>

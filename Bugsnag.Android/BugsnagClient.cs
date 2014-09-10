@@ -228,7 +228,7 @@ namespace Bugsnag
             return debuggable ? "development" : "production";
         }
 
-        private static string MakeErrorCacheDir (Context ctx)
+        internal static string MakeErrorCacheDir (Context ctx)
         {
             var path = Path.Combine (ctx.CacheDir.AbsolutePath, "bugsnag-events");
             if (!Directory.Exists (path)) {
