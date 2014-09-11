@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Android Sample", "Android Sample.csproj", "{147B908D-70E9-460E-BD19-492C3A23E176}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bugsnag", "..\..\Bugsnag\Bugsnag.csproj", "{CDA61B61-8B8F-4271-8910-431D36B0D01A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bugsnag.Android", "..\..\Bugsnag.Android\Bugsnag.Android.csproj", "{788BF660-D3A3-4FE4-8EA0-9102557A2D86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{147B908D-70E9-460E-BD19-492C3A23E176}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{147B908D-70E9-460E-BD19-492C3A23E176}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{147B908D-70E9-460E-BD19-492C3A23E176}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{147B908D-70E9-460E-BD19-492C3A23E176}.Release|Any CPU.Build.0 = Release|Any CPU
+		{788BF660-D3A3-4FE4-8EA0-9102557A2D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{788BF660-D3A3-4FE4-8EA0-9102557A2D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{788BF660-D3A3-4FE4-8EA0-9102557A2D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{788BF660-D3A3-4FE4-8EA0-9102557A2D86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Android Sample.csproj
+	EndGlobalSection
+EndGlobal

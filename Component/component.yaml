@@ -1,0 +1,26 @@
+%YAML 1.2
+---
+id: toggl-bugsnag
+name: Toggl's Bugsnag Error Notifier
+summary: Send crashes & errors in your Android/iOS application to the Bugsnag error monitoring service.
+version: 1.0.0
+publisher: Toggl
+publisher-url: https://toggl.com/
+src-url: https://github.com/toggl/bugsnag-xamarin
+details: Details.md
+license: ../LICENSE
+getting-started: GettingStarted.md
+icons:
+  - toggl-bugsnag_128x128.png
+  - toggl-bugsnag_512x512.png
+screenshots:
+libraries:
+  ios:
+    - ../Bugsnag/bin/Release/Bugsnag.dll
+    - ../Bugsnag.iOS/bin/Release/Bugsnag.iOS.dll
+  android:
+    - ../Bugsnag/bin/Release/Bugsnag.dll
+    - ../Bugsnag.Android/bin/Release/Bugsnag.Android.dll
+samples:
+  iOS Sample: ../Samples/Bugsnag.Sample.iOS/Bugsnag.Sample.iOS.sln
+  Android Sample: ../Samples/Bugsnag.Sample.Android/Bugsnag.Sample.Android.sln

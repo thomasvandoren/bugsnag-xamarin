@@ -14,5 +14,6 @@ local.properties
 *.user
 *.suo
 *.nupkg
+*.xam
 packages
 Resource.designer.cs

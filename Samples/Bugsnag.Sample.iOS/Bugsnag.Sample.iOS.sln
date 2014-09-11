@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iOS Sample", "iOS Sample.csproj", "{5ED7FC47-7D4F-4148-AF1B-30F95328A950}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bugsnag", "..\..\Bugsnag\Bugsnag.csproj", "{CDA61B61-8B8F-4271-8910-431D36B0D01A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bugsnag.iOS", "..\..\Bugsnag.iOS\Bugsnag.iOS.csproj", "{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+		Ad-Hoc|iPhone = Ad-Hoc|iPhone
+		AppStore|iPhone = AppStore|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Debug|iPhone.Build.0 = Debug|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Release|iPhone.ActiveCfg = Release|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Release|iPhone.Build.0 = Release|iPhone
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{5ED7FC47-7D4F-4148-AF1B-30F95328A950}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Release|iPhone.Build.0 = Release|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{CC9892E9-B068-44CD-9C7C-BC807FFC8E4C}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|iPhone.Build.0 = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = iOS Sample.csproj
+	EndGlobalSection
+EndGlobal
