@@ -46,7 +46,7 @@ namespace Sample
             return id;
         }
 
-        public static IBugsnagClient BugsnagClient {
+        public static BugsnagClient BugsnagClient {
             get { return bugsnagClient; }
         }
     }
