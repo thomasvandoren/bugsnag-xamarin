@@ -55,13 +55,13 @@ public class MyBaseActivity : Activity
         get { return ((AndroidApp)Application).BugsnagClient; }
     }
 
-    protected sealed override void OnCreate (Bundle state)
+    protected override void OnCreate (Bundle state)
     {
         base.OnCreate (state);
         BugsnagClient.OnActivityCreated (this);
     }
 
-    protected sealed override void OnResume ()
+    protected override void OnResume ()
     {
         base.OnResume ();
         BugsnagClient.OnActivityResumed (this);
