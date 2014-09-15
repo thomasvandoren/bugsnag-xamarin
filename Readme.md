@@ -2,6 +2,8 @@
 
 This repository contains the source code for [Toggl's](https://toggl.com/) [Xamarin.Android](http://xamarin.com/platform#android)/[Xamarin.iOS](http://xamarin.com/platform#ios) exception reporting libraries for [Bugsnag](https://bugsnag.com/) error monitoring service.
 
+NB! This is a community developed Bugsnag notifier library.
+
 ## Usage
 
 The package can be easily added to your project from Nuget.

@@ -14,6 +14,7 @@ icons:
   - toggl-bugsnag_128x128.png
   - toggl-bugsnag_512x512.png
 screenshots:
+  - Screenshots/BugsnagWeb.png
 libraries:
   ios:
     - ../Bugsnag/bin/Release/Bugsnag.dll
