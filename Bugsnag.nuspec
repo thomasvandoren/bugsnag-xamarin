@@ -6,6 +6,7 @@
     <version>1.0.0</version>
     <authors>Toggl</authors>
     <owners>toggl, roosmaa</owners>
+    <iconUrl>https://raw.githubusercontent.com/toggl/bugsnag-xamarin/master/Component/toggl-bugsnag_32x32.png</iconUrl>
     <licenseUrl>https://github.com/toggl/bugsnag-xamarin/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/toggl/bugsnag-xamarin</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
