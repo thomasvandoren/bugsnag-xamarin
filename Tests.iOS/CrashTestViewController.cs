@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using MonoTouch.Foundation;
+using Foundation;
 using MonoTouch.NUnit.UI;
-using MonoTouch.UIKit;
+using UIKit;
 
 namespace Bugsnag.Test
 {
@@ -54,7 +54,7 @@ namespace Bugsnag.Test
 
         private void SetupBugsnag ()
         {
-            if (bugsnagClient != null) {
+            if (bugsnagClient == null) {
                 bugsnagClient = new BugsnagClient ("testing", false) {
                     DeviceId = Guid.NewGuid ().ToString (),
                     ProjectNamespaces = new List<string> () { "Bugsnag." },
@@ -72,7 +72,7 @@ namespace Bugsnag.Test
 
         private void CauseNSException ()
         {
-            PerformSelector (new MonoTouch.ObjCRuntime.Selector ("totallyInvalidSelector"), new NSString (), 0.1);
+            PerformSelector (new ObjCRuntime.Selector ("totallyInvalidSelector"), new NSString (), 0.1);
         }
 
         private void CauseSegFault ()
