@@ -104,7 +104,4 @@ Global
 		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{CDA61B61-8B8F-4271-8910-431D36B0D01A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Tests.iOS\Tests.iOS.csproj
-	EndGlobalSection
 EndGlobal

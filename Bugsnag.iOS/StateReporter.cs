@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Bugsnag.Data;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
 namespace Bugsnag
 {
@@ -55,14 +56,14 @@ namespace Bugsnag
                 Id = client.DeviceId,
                 Manufacturer = "Apple",
                 Model = Model,
-                ScreenDensity = UIScreen.MainScreen.Scale,
+                ScreenDensity = (float)UIScreen.MainScreen.Scale,
                 ScreenResolution = ScreenResolution,
                 TotalMemory = TotalMemory,
                 OperatingSystem = "iOS",
                 OperatingSystemVersion = NSProcessInfo.ProcessInfo.OperatingSystemVersionString,
                 IsJailbroken = UIApplication.SharedApplication.CanOpenUrl (new NSUrl ("cydia://")),
                 Locale = NSLocale.CurrentLocale.LocaleIdentifier,
-                DiskSize = FileSystemAttributes.Size,
+                DiskSize = FileSystemAttributes.Size, 
             };
         }
 
@@ -136,7 +137,7 @@ namespace Bugsnag
             }
         }
 
-        [DllImport (MonoTouch.Constants.SystemLibrary)]
+        [DllImport (Constants.SystemLibrary)]
         private static extern int sysctlbyname ([MarshalAs (UnmanagedType.LPStr)] string property, byte[] output, ref long oldLen, IntPtr newp, uint newlen);
 
         private static string TopMostViewController {

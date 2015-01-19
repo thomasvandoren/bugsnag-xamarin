@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Bugsnag.Data;
 
 namespace Bugsnag.Interceptor

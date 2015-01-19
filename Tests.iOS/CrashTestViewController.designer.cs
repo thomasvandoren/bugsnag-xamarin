@@ -4,8 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
-using System.CodeDom.Compiler;
+using Foundation;
 
 namespace Bugsnag.Test
 {
@@ -13,19 +12,19 @@ namespace Bugsnag.Test
 	partial class CrashTestViewController
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIButton ManagedTestButton { get; set; }
+		UIKit.UIButton ManagedTestButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton NSExceptionTestButton { get; set; }
+		UIKit.UIButton NSExceptionTestButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton SegFaultTestButton { get; set; }
+		UIKit.UIButton SegFaultTestButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel TestResultLabel { get; set; }
+		UIKit.UILabel TestResultLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton UnitTestButton { get; set; }
+		UIKit.UIButton UnitTestButton { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

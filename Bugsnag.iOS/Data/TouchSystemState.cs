@@ -1,6 +1,6 @@
 using Bugsnag.Json;
-using MonoTouch.UIKit;
 using Newtonsoft.Json;
+using UIKit;
 
 namespace Bugsnag.Data
 {
