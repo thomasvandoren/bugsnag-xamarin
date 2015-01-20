@@ -16,7 +16,7 @@ icons:
 screenshots:
   - Screenshots/BugsnagWeb.png
 libraries:
-  ios:
+  ios-unified:
     - ../Bugsnag/bin/Release/Bugsnag.dll
     - ../Bugsnag.iOS/bin/Release/Bugsnag.iOS.dll
   android:
