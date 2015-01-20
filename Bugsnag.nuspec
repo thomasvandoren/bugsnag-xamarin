@@ -19,15 +19,15 @@
   </metadata>
   <files>
     <!-- Portable -->
-    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/portable-net45+wp8+win8+MonoAndroid10+MonoTouch10/Bugsnag.dll" />
+    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/portable-net45+wp8+win8+MonoAndroid10+Xamarin.iOS10/Bugsnag.dll" />
 
     <!-- Xamarin.Android -->
     <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/MonoAndroid10/Bugsnag.dll" />
     <file src="Bugsnag.Android/bin/Release/Bugsnag.Android.dll" target="lib/MonoAndroid10/Bugsnag.Android.dll" />
 
     <!-- Xamarin.iOS -->
-    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/MonoTouch10/Bugsnag.dll" />
-    <file src="Bugsnag.iOS/bin/Release/Bugsnag.iOS.dll" target="lib/MonoTouch10/Bugsnag.iOS.dll" />
+    <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/Xamarin.iOS10/Bugsnag.dll" />
+    <file src="Bugsnag.iOS/bin/Release/Bugsnag.iOS.dll" target="lib/Xamarin.iOS10/Bugsnag.iOS.dll" />
 
     <!-- NET 4.5 -->
     <file src="Bugsnag/bin/Release/Bugsnag.dll" target="lib/net45/Bugsnag.dll" />
