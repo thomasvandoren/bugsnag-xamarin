@@ -4,7 +4,7 @@
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace Sample
@@ -13,10 +13,10 @@ namespace Sample
 	partial class DemoViewController
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIButton CrashButton { get; set; }
+		UIKit.UIButton CrashButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton NotifyButton { get; set; }
+		UIKit.UIButton NotifyButton { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

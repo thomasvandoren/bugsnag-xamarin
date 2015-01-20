@@ -1,7 +1,7 @@
 ﻿using System;
 using Bugsnag.Data;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
+using ObjCRuntime;
+using UIKit;
 
 namespace Sample
 {
