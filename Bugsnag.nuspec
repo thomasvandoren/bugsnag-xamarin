@@ -3,7 +3,7 @@
   <metadata>
     <id>Toggl.Bugsnag</id>
     <title>Bugsnag Notifier for Xamarin Android/iOS</title>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <authors>Toggl</authors>
     <owners>toggl, roosmaa</owners>
     <iconUrl>https://raw.githubusercontent.com/toggl/bugsnag-xamarin/master/Component/toggl-bugsnag_32x32.png</iconUrl>
@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/toggl/bugsnag-xamarin</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Easily log exceptions and crashes to Bugsnag in your Xamarin.Android or Xamarin.iOS applications.</description>
-    <copyright>Copyright 2014</copyright>
+    <copyright>Copyright 2015</copyright>
     <tags>bugsnag xamarin android ios crash exception bug</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="6.0.4" />

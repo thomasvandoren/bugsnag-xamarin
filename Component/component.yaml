@@ -3,7 +3,7 @@
 id: toggl-bugsnag
 name: Toggl's Bugsnag Error Notifier
 summary: Send crashes & errors in your Android/iOS application to the Bugsnag error monitoring service.
-version: 1.0.0
+version: 1.0.1
 publisher: Toggl
 publisher-url: https://toggl.com/
 src-url: https://github.com/toggl/bugsnag-xamarin
